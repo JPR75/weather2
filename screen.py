@@ -19,7 +19,7 @@ class updateDateScreen (Canvas) :
     try :
       # Hour and date
       hour = time.strftime("%H:%M:%S - %A, %B %d %Y", time.localtime())
-      self.canvas.create_text(config.horizontal_offset + 230, 0, anchor = NW, fill = "white", font = ("Arial", 32), text = hour, width = 0)
+      self.canvas.create_text(config.horizontal_offset - 50, 0, anchor = NW, fill = "white", font = ("Arial", 54), text = hour, width = 0)
     except Exception as error :
       print("Screen exception : 1\n")
       raise

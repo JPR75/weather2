@@ -22,6 +22,8 @@ class getForecats () :
     """Is it time to update the forecast?"""
     if getForecats.next_update < time.time() :
       self.download_forecasts()
+      #if config.update_delay < 2.0 :
+      #  config.update_delay = 2.0
       getForecats.next_update = time.time() + (config.update_delay * 3600.0)
 
   def download_forecasts (self) :
