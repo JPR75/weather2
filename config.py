@@ -21,7 +21,7 @@ now_later = 4
 screen_dimension = {'width' : 1270, 'height' : 700}
 
 # Horizontal offset in pixels
-horizontal_offset = 60
+horizontal_offset = 5
 
 # Temperature unit
 unit = " C"
