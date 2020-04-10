@@ -48,26 +48,26 @@ class updateTodayScreen (Canvas) :
         self.canvas.icon_forcast.append(PhotoImage(file = 'icons/' + str(forcast_data[4 + index]) + '.gif'))
       except Exception as error :
         error_text = 'Icon error: ' + str(forcast_data[4 + index]) + '.gif'
-        self.canvas.create_text(horizotal_align + 150, 95, anchor = NW, fill = "white", font = ("Arial", 38), text = error_text, width = 0)
+        self.canvas.create_text(horizotal_align + 20, 95, anchor = NW, fill = "white", font = ("Arial", 38), text = error_text, width = 0)
         print("Screen exception : 2\n")
         raise
       else :
-        self.canvas.create_image(horizotal_align + 150, 95, anchor = NW, image = self.canvas.icon_forcast[i])
+        self.canvas.create_image(horizotal_align + 20, 95, anchor = NW, image = self.canvas.icon_forcast[i])
 
       try :
         # Status
-        self.canvas.create_text(horizotal_align + 320, 100, anchor = NW, fill = "white", font = ("Arial", 38), text = forcast_data[3 + index], width = 0)
+        self.canvas.create_text(horizotal_align + 190, 100, anchor = NW, fill = "white", font = ("Arial", 38), text = forcast_data[3 + index], width = 0)
 
         # Temperature
         T = str(forcast_data[5 + index]) + config.unit
-        self.canvas.create_text(horizotal_align + 320, 150, anchor = NW, fill = "white", font = ("Arial", 38), text = T, width = 0)
+        self.canvas.create_text(horizotal_align + 190, 150, anchor = NW, fill = "white", font = ("Arial", 38), text = T, width = 0)
 
         # Forcast time from now in hour
         time_offset = 'now + ' + str(forcast_data[9 + index]) + 'h'
-        self.canvas.create_text(horizotal_align + 320, 200, anchor = NW, fill = "white", font = ("Arial", 38), text = time_offset, width = 0)
+        self.canvas.create_text(horizotal_align + 190, 200, anchor = NW, fill = "white", font = ("Arial", 38), text = time_offset, width = 0)
 
         if forcast_data[10 + index] == True :
-          self.canvas.create_text(150 + horizotal_align, 220, anchor = NW, fill = "red", font = ("Arial", 30), text = "Warning!", width = 0)
+          self.canvas.create_text(horizotal_align - 10, 220, anchor = NW, fill = "red", font = ("Arial", 30), text = "Warning!", width = 0)
       except Exception as error :
         print("Screen exception : 3\n")
         raise
@@ -107,7 +107,7 @@ class updateForcatScreen (Canvas) :
 
         # Warning
         if forcast_data[26 + index] == True :
-          self.canvas.create_text(50 + horizotal_align, 490, anchor = NW, fill = "red", font = ("Arial", 30), text = "Warning!", width = 0)
+          self.canvas.create_text(horizotal_align + 50, 490, anchor = NW, fill = "red", font = ("Arial", 30), text = "Warning!", width = 0)
       except Exception as error :
         print("Screen exception : 5\n")
         raise
