@@ -4,7 +4,7 @@ It has been designed to run on a 7" screen with a Raspberry Pi 3B+
 
 Data are retrieved from [OpenWeatherMap](https://openweathermap.org/) and [Aqicn](https://aqicn.org/)
 
-![weather](/img/screen.jpeg)
+![weather](img/screen.jpg)
 
 # Requirements
 
