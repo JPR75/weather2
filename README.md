@@ -9,8 +9,8 @@ Data are retrieved from [OpenWeatherMap](https://openweathermap.org/) and [Aqicn
 # Requirements
 
   * Python 10+
-  * OpenWeatherMap Key. Free, need to sign up and add a free key to your account at [OpenWeatherMap sign up](https://home.openweathermap.org/users/sign_up)
-  * Aqicn Key. Free, need to sign up at [Aqicn token](https://aqicn.org/data-platform/token/)
+  * OpenWeatherMap key. Free, need to sign up and add a free key to your account at [OpenWeatherMap sign up](https://home.openweathermap.org/users/sign_up)
+  * Aqicn key. Free, need to sign up at [Aqicn token](https://aqicn.org/data-platform/token/)
 
 # Configuration
 
@@ -24,7 +24,7 @@ Edit config.py to configure the list of cities to be displayed:
 ```
 towns_list = [('Paris' , 10), ('Stockholm' , 10)]
 towns_list = [('Paris' , 60), ('Stockholm' , 10), ('New York' , 10)]
-towns_list = [('Paris' , 60)]`
+towns_list = [('Paris' , 60)]
 ```
 
 ## Update forecast
