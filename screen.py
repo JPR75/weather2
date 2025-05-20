@@ -187,7 +187,14 @@ class drawScreens (Canvas) :
       print("\n")
 
     if self.index == 0 :
-      forecast.getForecats().check_update()
+        try :
+          forecast.getForecats().check_update()
+        except Exception as error :
+          print("Screen exception : 9\n")
+          print(error)
+          print("\n")
+          # On old Raspberry wifi is not reable. Let's wait a little and retry
+          time.sleep(30)
 
     if len(global_datas.forecasts) > 0 :
       if drawScreens.delay < time.time() :
@@ -200,7 +207,7 @@ class drawScreens (Canvas) :
           update_aqi_screen(self.forecast_canvas).update_today(forcast_data)
           updateForcatScreen(self.forecast_canvas).update_forecasts(forcast_data)
         except Exception as error :
-          print("Screen exception : 9\n")
+          print("Screen exception : 10\n")
           print(error)
           print("\n")
 

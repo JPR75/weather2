@@ -21,8 +21,15 @@ class getForecats () :
   def check_update (self) :
     """Is it time to update the forecast?"""
     if getForecats.next_update < time.time() :
-      self.download_forecasts()
-      getForecats.next_update = time.time() + (config.update_delay * 3600.0)
+      try :
+        self.download_forecasts()
+      except :
+        print("Forcast exception : 1 ")
+        print(error)
+        print(time.strftime("%H:%M:%S - %A, %B %d %Y", time.localtime(getForecats.next_update)))
+        print("\n")
+    else :
+        getForecats.next_update = time.time() + (config.update_delay * 3600.0)
 
   def download_forecasts (self) :
     """Download forecast from OpenWeatherMap"""
@@ -47,7 +54,7 @@ class getForecats () :
           ["Unknown", 99997, 0, 0, 0, "", 0, False],
           ["Unknown", 99997, 0, 0, 0, "", 0, False]]
         global_datas.forecasts += [forecast[0] + forecast[1] + forecast[2] + forecast[3] + forecast[4] + forecast[5] + forecast[6]]
-        print("Forcast exception : 1 ")
+        print("Forcast exception : 2 ")
         print(error)
         print("\n")
 
@@ -55,7 +62,6 @@ class getForecats () :
         forecast[0][0] = False  # Status = OK
 
         # For today lets get the status at now_offset (updated evry 3h by Openweathermap)
-        #date = datetime.datetime.today() + datetime.timedelta(hours = config.now_offset)
         try :
           forecast[0][2] = time.strftime("Forecast time: %H:%M GMT", time.gmtime(fc.get_date_UNIX()))
           forecast[1][0] = fc.get_description()
@@ -68,7 +74,7 @@ class getForecats () :
           forecast[1][7] = forecast[1][1] in global_datas.warning_states
         except Exception as error :
           forecast[1] = ["", 99997, 0, 0, 0, "", 0, False]
-          print("Forcast exception : 2 ")
+          print("Forcast exception : 3 ")
           print(error)
           print("\n")
 
@@ -85,7 +91,7 @@ class getForecats () :
           forecast[2][7] = forecast[2][1] in global_datas.aqi_warning_states
         except Exception as error :
           forecast[2] = ["", 99997, 0, 0, 0, "", 0, False]
-          print("Forcast exception : 3 ")
+          print("Forcast exception : 4 ")
           print(error)
           print("\n")
 
@@ -103,7 +109,7 @@ class getForecats () :
             forecast[i+2][7] = forecast[i+2][1] in global_datas.warning_states
           except Exception as error :
             forecast[i+2] = ["", 99997, 0, 0, 0, "", 0, False]
-            print("Forcast exception : 4 ")
+            print("Forcast exception : 5 ")
             print(error)
             print("\n")
 
