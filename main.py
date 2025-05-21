@@ -21,10 +21,14 @@ if __name__ =="__main__" :
         date_canvas.grid(row = 0, column = 0, rowspan = 1, padx = 0, pady = 0)
         forecast_canvas = Canvas(main_windows, width = config.screen_dimension['width'], height = (config.screen_dimension['height'] - 90), bg = 'black' )
         forecast_canvas.grid(row = 1, column = 0, rowspan = 3, padx = 0, pady = 0)
-      except :
+      except Exception as error :
         print("*** Error while creating sreen; aborting\n")
+        print(error)
+        print("\n")
       else :
         screen.drawScreens(date_canvas, forecast_canvas)
         main_windows.mainloop()
     else :
       print("*** Error no town defined in config file; aborting\n")
+      print("\n")
+
