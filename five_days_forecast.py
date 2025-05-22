@@ -23,6 +23,7 @@ class get_five_days_forecast () :
         self.temperature = []
         self.temperature_celsius = []
         self.week_day = []
+        self.forecast_hour = []
 
        # Check for errors
         match self.code:
@@ -35,19 +36,62 @@ class get_five_days_forecast () :
             case 400000:
                 raise Exception("Subscription error")
             case "200":
+                # Now + 3h forecast
+                today = True
+                now_plus_3h = int(time.strftime("%H", time.localtime())) + 3
+                if (now_plus_3h <= 3) :
+                    today_now_plus_3h = "03:00:00"
+                elif (now_plus_3h <= 6) :
+                    today_now_plus_3h = "06:00:00"
+                elif (now_plus_3h <= 9) :
+                    today_now_plus_3h = "09:00:00"
+                elif (now_plus_3h <= 12) :
+                    today_now_plus_3h = "12:00:00"
+                elif (now_plus_3h <= 15) :
+                    today_now_plus_3h = "15:00:00"
+                elif (now_plus_3h <= 18) :
+                    today_now_plus_3h = "18:00:00"
+                elif (now_plus_3h <= 21) :
+                    today_now_plus_3h = "21:00:00"
+                else :
+                    today_now_plus_3h = "03:00:00"
+                    today = False
+
                 # Extract usefull data
                 self.city = owm_data["city"]["name"]
                 self.date_UNIX = owm_data["list"][0]["dt"]
                 for entry in owm_data["list"]:
-                    self.date = entry["dt_txt"].split(" ")[0]
+                    date = entry["dt_txt"].split(" ")[0]
                     hour = entry["dt_txt"].split(" ")[1]
-                    if (self.date != time.strftime("%Y-%m-%d", time.localtime())) :
+                    # if the current hour is between 00:00:00 and 19:00:00, then the current hour + 3h
+                    # forecast is displayed
+                    if (date == time.strftime("%Y-%m-%d", time.localtime()) and today == True) :
+                        if (hour == today_now_plus_3h) :
+                            self.weather_description.append(entry["weather"][0]["main"])
+                            self.week_day.append(time.strftime("%A", time.localtime(entry["dt"])))
+                            self.temperature.append(entry["main"]["temp"])
+                            self.temperature_celsius.append(entry["main"]["temp"] - 273.15)
+                            self.weather_condition.append(entry["weather"][0]["id"])
+                            self.forecast_hour.append(hour)
+                    if (date != time.strftime("%Y-%m-%d", time.localtime())) :
+                        # if the current hour is between 19:00:00 and 00:00:00, then the tomorrow 3 AM
+                        # forecast is displayed
+                        if (today == False) :
+                            if (hour == today_now_plus_3h) :
+                                self.weather_description.append(entry["weather"][0]["main"])
+                                self.week_day.append(time.strftime("%A", time.localtime(entry["dt"])))
+                                self.temperature.append(entry["main"]["temp"])
+                                self.temperature_celsius.append(entry["main"]["temp"] - 273.15)
+                                self.weather_condition.append(entry["weather"][0]["id"])
+                                self.forecast_hour.append(hour)
+                                today = True
                         if (hour == "12:00:00") :
                             self.weather_description.append(entry["weather"][0]["main"])
                             self.week_day.append(time.strftime("%A", time.localtime(entry["dt"])))
                             self.temperature.append(entry["main"]["temp"])
                             self.temperature_celsius.append(entry["main"]["temp"] - 273.15)
                             self.weather_condition.append(entry["weather"][0]["id"])
+                            self.forecast_hour.append(hour)
             case _:
                 raise Exception("Unable to retrive data from OWM")
 
@@ -71,14 +115,16 @@ class get_five_days_forecast () :
         """Get forcast date (UNIX)"""
         return self.date_UNIX
 
+    def get_forecast_hour (self) :
+        """Get forcast hour"""
+        return self.forecast_hour
+
     def get_week_day (self) :
         """Get forcast week day"""
         return self.week_day
 
     def get_delta_time (self) :
         """Get delta between current time and forcast time in hours"""
-        print(time.time())
-        print(self.date_UNIX)
         return str(time.gmtime(time.time() - self.date_UNIX)[3])
 
     def get_temperature_kelvin (self) :

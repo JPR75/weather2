@@ -74,6 +74,53 @@ class updateTodayScreen (Canvas) :
         raise
 
 #------------------------------------------------------------------------------
+# Update the now +3h screen with current info
+#------------------------------------------------------------------------------
+class update_now_plus_3h_Screen (Canvas) :
+  """Update the now +3h screen with current info"""
+  def __init__(self, main_canvas) :
+    self.canvas = main_canvas
+    self.canvas.now3h_icon_forcast = []
+    self.canvas.now3h_icon_network_disconnect = []
+    self.canvas.now3h_icon_danger = []
+
+  def update_today (self, forcast_data) :
+    horizotal_align = 700 + config.horizontal_offset
+
+    # State icon
+    try :
+        self.canvas.now3h_icon_forcast.append(PhotoImage(file = 'icons/' + str(forcast_data[20]) + '.png'))
+    except Exception as error :
+        error_text = 'Icon error: ' + str(forcast_data[20]) + '.png'
+        self.canvas.create_text(horizotal_align + 20, 95, anchor = NW, fill = "white", font = ("Arial", 38), text = error_text, width = 0)
+        print("Screen exception : 2\n")
+        print(error)
+        print("\n")
+        raise
+    else :
+        self.canvas.create_image(horizotal_align + 20, 95, anchor = NW, image = self.canvas.now3h_icon_forcast[0])
+
+    try :
+        # Day
+        self.canvas.create_text(horizotal_align + 190, 50, anchor = NW, fill = "white", font = ("Arial", 38), text = forcast_data[24], width = 0)
+
+        # Forecast hour
+        self.canvas.create_text(horizotal_align + 190, 100, anchor = NW, fill = "white", font = ("Arial", 36), text = forcast_data[25], width = 0)
+
+        # Temperature
+        T = str(forcast_data[21]) + config.unit
+        self.canvas.create_text(horizotal_align + 190, 150, anchor = NW, fill = "white", font = ("Arial", 38), text = T, width = 0)
+
+        # Warning
+        if forcast_data[26] == True :
+            self.canvas.create_text(horizotal_align + 190, 200, anchor = NW, fill = "red", font = ("Arial", 38), text = "Warning!", width = 0)
+    except Exception as error :
+        print("Screen exception : 3\n")
+        print(error)
+        print("\n")
+        raise
+
+#------------------------------------------------------------------------------
 # Update the air quality screen with current info
 #------------------------------------------------------------------------------
 class update_aqi_screen (Canvas) :
@@ -131,13 +178,13 @@ class updateForcatScreen (Canvas) :
       horizotal_align = i * 320 + config.horizontal_offset
 
       # Day
-      self.canvas.create_text(40 + horizotal_align, 270, anchor = NW, fill = "white", font = ("Arial", 34), text = forcast_data[24 + index], width = 0)
+      self.canvas.create_text(40 + horizotal_align, 270, anchor = NW, fill = "white", font = ("Arial", 34), text = forcast_data[32 + index], width = 0)
 
       # Icon
       try :
-        self.canvas.icon_forcast_data.append(PhotoImage(file = 'icons/' + str(forcast_data[20 + index]) + '.png'))
+        self.canvas.icon_forcast_data.append(PhotoImage(file = 'icons/' + str(forcast_data[28 + index]) + '.png'))
       except Exception as error :
-        error_text = 'Icon error: ' + str(forcast_data[20 + index]) + '.png'
+        error_text = 'Icon error: ' + str(forcast_data[28 + index]) + '.png'
         self.canvas.create_text(horizotal_align + 57, 315, anchor = NW, fill = "white", font = ("Arial", 34), text = error_text, width = 0)
         print("Screen exception : 6\n")
         print(error)
@@ -148,11 +195,11 @@ class updateForcatScreen (Canvas) :
 
       try :
         # Temperature
-        T = '   ' + str(forcast_data[21 + index]) + config.unit
+        T = '   ' + str(forcast_data[29 + index]) + config.unit
         self.canvas.create_text(50 + horizotal_align, 465, anchor = NW, fill = "white", font = ("Arial", 38), text = T, width = 0)
 
         # Warning
-        if forcast_data[26 + index] == True :
+        if forcast_data[34 + index] == True :
             self.canvas.create_text(horizotal_align + 50, 505, anchor = NW, fill = "red", font = ("Arial", 30), text = "Warning!", width = 0)
       except Exception as error :
         print("Screen exception : 7\n")
@@ -166,14 +213,15 @@ class updateForcatScreen (Canvas) :
 #------------------------------------------------------------------------------
 class drawScreens (Canvas) :
   """Draw screens"""
-  delay = 0.0
+  screen_delay = 0.0 # screen delay between town swap
 
   def __init__(self, date_canvas, forecast_canvas) :
     Frame.__init__(self)
     self.date_canvas = date_canvas
     self.forecast_canvas = forecast_canvas
 
-    self.index = 0
+    self.index = 0 # correspond to town in tows_list[]
+    self.aqi_swap = True # swap between air quality and now +3h forecast
     self.refresh_screen()
 
   def refresh_screen (self) :
@@ -188,32 +236,39 @@ class drawScreens (Canvas) :
 
     if self.index == 0 :
         try :
-          forecast.getForecats().check_update()
+            forecast.getForecats().check_update()
         except Exception as error :
-          print("Screen exception : 9\n")
-          print(error)
-          print("\n")
-          # On old Raspberry wifi is not reable. Let's wait a little and retry
-          time.sleep(30)
+            print("Screen exception : 9\n")
+            print(error)
+            print("\n")
+            # On old Raspberry wifi is not reable. Let's wait a little and retry
+            time.sleep(30)
 
     if len(global_datas.forecasts) > 0 :
-      if drawScreens.delay < time.time() :
-        forcast_data = global_datas.forecasts[self.index]
-        drawScreens.delay = time.time() + config.towns_list[self.index][1]
+        if drawScreens.screen_delay < time.time() :
+            forcast_data = global_datas.forecasts[self.index]
+            drawScreens.screen_delay = time.time() + config.towns_list[self.index][1]
 
-        try :
-          self.forecast_canvas.delete("all")
-          updateTodayScreen(self.forecast_canvas).update_today(forcast_data)
-          update_aqi_screen(self.forecast_canvas).update_today(forcast_data)
-          updateForcatScreen(self.forecast_canvas).update_forecasts(forcast_data)
-        except Exception as error :
-          print("Screen exception : 10\n")
-          print(error)
-          print("\n")
+            try :
+                self.forecast_canvas.delete("all")
+                updateTodayScreen(self.forecast_canvas).update_today(forcast_data)
+                #if drawScreens.aqi_delay < time.time() :
+                #    drawScreens.aqi_swap = not drawScreens.aqi_swap
+                #    drawScreens.aqi_delay = time.time() + config.aqi_frequency
+                if self.aqi_swap :
+                    update_now_plus_3h_Screen(self.forecast_canvas).update_today(forcast_data)
+                else :
+                    update_aqi_screen(self.forecast_canvas).update_today(forcast_data)
+                updateForcatScreen(self.forecast_canvas).update_forecasts(forcast_data)
+            except Exception as error :
+                print("Screen exception : 10\n")
+                print(error)
+                print("\n")
 
-        if self.index < len(global_datas.forecasts) - 1 :
-          self.index += 1
-        else :
-          self.index = 0
+            if self.index < len(global_datas.forecasts) - 1 :
+                self.index += 1
+            else :
+                self.index = 0
+                self.aqi_swap = not self.aqi_swap # swap between now +3h and air quality
 
     self.after(500, self.refresh_screen)

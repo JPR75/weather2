@@ -21,19 +21,20 @@ class getForecats () :
   def check_update (self) :
     """Is it time to update the forecast?"""
     if getForecats.next_update < time.time() :
-      try :
-        self.download_forecasts()
-      except :
-        print("Forcast exception : 1 ")
-        print(error)
-        print(time.strftime("%H:%M:%S - %A, %B %d %Y", time.localtime(getForecats.next_update)))
-        print("\n")
-    else :
-        getForecats.next_update = time.time() + (config.update_delay * 3600.0)
+        try :
+            self.download_forecasts()
+        except Exception as error :
+            print("Forcast exception : 1 ")
+            print(error)
+            print(time.strftime("%H:%M:%S - %A, %B %d %Y", time.localtime(getForecats.next_update)))
+            print("\n")
+        else :
+            getForecats.next_update = time.time() + (config.update_delay * 3600.0)
 
   def download_forecasts (self) :
     """Download forecast from OpenWeatherMap"""
     forecast = [[True, "Connection Failed", ""],
+      ["Unknown", 99997, 0, 0, 0, "", 0, False],
       ["Unknown", 99997, 0, 0, 0, "", 0, False],
       ["Unknown", 99997, 0, 0, 0, "", 0, False],
       ["Unknown", 99997, 0, 0, 0, "", 0, False],
@@ -52,8 +53,9 @@ class getForecats () :
           ["Unknown", 99997, 0, 0, 0, "", 0, False],
           ["Unknown", 99997, 0, 0, 0, "", 0, False],
           ["Unknown", 99997, 0, 0, 0, "", 0, False],
+          ["Unknown", 99997, 0, 0, 0, "", 0, False],
           ["Unknown", 99997, 0, 0, 0, "", 0, False]]
-        global_datas.forecasts += [forecast[0] + forecast[1] + forecast[2] + forecast[3] + forecast[4] + forecast[5] + forecast[6]]
+        global_datas.forecasts += [forecast[0] + forecast[1] + forecast[2] + forecast[3] + forecast[4] + forecast[5] + forecast[6] + forecast[7]]
         print("Forcast exception : 2 ")
         print(error)
         print("\n")
@@ -97,7 +99,7 @@ class getForecats () :
 
         # For other days lets get the status and temperature for mid day
         fc = get_five_days_forecast(openweathermap_key.key, town[0])
-        for i in range(1, 5):
+        for i in range(1, 6):
           try :
             forecast[i+2][0] = fc.get_description()[i - 1]
             forecast[i+2][1] = fc.get_weather_condition()[i - 1]
@@ -105,7 +107,7 @@ class getForecats () :
             forecast[i+2][3] = 0.0
             forecast[i+2][4] = 0.0
             forecast[i+2][5] = fc.get_week_day()[i - 1]
-            forecast[i+2][6] = time.gmtime(fc.get_date_UNIX() - time.time())[3]
+            forecast[i+2][6] = fc.get_forecast_hour()[i - 1]
             forecast[i+2][7] = forecast[i+2][1] in global_datas.warning_states
           except Exception as error :
             forecast[i+2] = ["", 99997, 0, 0, 0, "", 0, False]
@@ -113,4 +115,4 @@ class getForecats () :
             print(error)
             print("\n")
 
-        global_datas.forecasts += [forecast[0] + forecast[1] + forecast[2] + forecast[3] + forecast[4] + forecast[5] + forecast[6]]
+        global_datas.forecasts += [forecast[0] + forecast[1] + forecast[2] + forecast[3] + forecast[4] + forecast[5] + forecast[6] + forecast[7]]

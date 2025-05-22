@@ -3,10 +3,14 @@
 
 # Towns id, see http://openweathermap.org/help/city_list.txt
 # (town id , number of seconds the town weather is shown befor switching to the next)
-towns_list = [('Paris', 60), ('Stockholm', 10)]
+# towns_list = [('Paris' , 10), ('Stockholm' , 10)]
+# towns_list = [('Paris' , 60), ('Stockholm' , 10), ('New York' , 10)]
+# towns_list = [('Paris' , 10)]
+towns_list = [('Paris', 10), ('Stockholm', 10)]
 
-# Frequency at which Openweathermap will be cheked (in hour)
+# Frequency at which Openweathermap will be checked (in hour)
 # 2.0 = 2h
+# 0.5 = 30 minutes
 update_delay = 0.5
 
 # Wait for OS be ready before lanching the software.
