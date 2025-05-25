@@ -2,7 +2,7 @@
 import requests, json
 import time
 
-import config
+import global_datas
 
 
 #------------------------------------------------------------------------------
@@ -62,6 +62,10 @@ class get_daily_forecast () :
 
     def get_weather_condition (self) :
         """Get weather weather_condition. See https://openweathermap.org/weather-conditions"""
+        if self.weather_condition in global_datas.night_icons :
+            if not(time.strftime("%H", time.localtime(self.date_UNIX)) in range (7, 20)) :
+              self.weather_condition += "n"
+
         return self.weather_condition
 
     def get_date_UNIX (self) :
