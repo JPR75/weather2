@@ -63,8 +63,8 @@ class get_daily_forecast () :
     def get_weather_condition (self) :
         """Get weather weather_condition. See https://openweathermap.org/weather-conditions"""
         if self.weather_condition in global_datas.night_icons :
-            if not(time.strftime("%H", time.localtime(self.date_UNIX)) in range (7, 20)) :
-              self.weather_condition += "n"
+            if not(int(time.strftime("%H", time.localtime(self.date_UNIX))) in range (7, 20)) :
+              self.weather_condition = self.weather_condition * 10
 
         return self.weather_condition
 

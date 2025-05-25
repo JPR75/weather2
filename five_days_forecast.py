@@ -112,8 +112,8 @@ class get_five_days_forecast () :
     def get_weather_condition (self) :
         """Get weather weather_condition. See https://openweathermap.org/weather-conditions"""
         if self.weather_condition[0] in global_datas.night_icons :
-            if not(self.forecast_hour[0].split(":")[0] in range (7, 20)) :
-              self.weather_condition[0] += "n"
+            if not(int(self.forecast_hour[0].split(":")[0]) in range (7, 20)) :
+              self.weather_condition[0] = self.weather_condition[0] * 10
 
         return self.weather_condition
 
