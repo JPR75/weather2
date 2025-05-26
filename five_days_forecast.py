@@ -3,6 +3,7 @@ import requests, json
 import time
 
 import global_datas
+from moon_phase import moon_phase
 
 
 #------------------------------------------------------------------------------
@@ -112,8 +113,9 @@ class get_five_days_forecast () :
     def get_weather_condition (self) :
         """Get weather weather_condition. See https://openweathermap.org/weather-conditions"""
         if self.weather_condition[0] in global_datas.night_icons :
-            if not(int(self.forecast_hour[0].split(":")[0]) in range (7, 20)) :
-              self.weather_condition[0] = self.weather_condition[0] * 10
+            if not(int(self.forecast_hour[0].split(":")[0]) in range (7, 21)) :
+              moon = moon_phase()
+              self.weather_condition[0] = self.weather_condition[0] * 10 + moon.get_moon_phase()
 
         return self.weather_condition
 

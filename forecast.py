@@ -66,13 +66,13 @@ class getForecats () :
         # For today lets get the status at now_offset (updated evry 3h by Openweathermap)
         try :
           forecast[0][2] = time.strftime("Forecast time: %H:%M GMT", time.gmtime(fc.get_date_UNIX()))
-          forecast[1][0] = fc.get_description()
-          forecast[1][1] = fc.get_weather_condition()
+          forecast[1][0] = fc.get_description() # weather description
+          forecast[1][1] = fc.get_weather_condition() # weather icon
           forecast[1][2] = int(round(fc.get_temperature_celsius()))
           forecast[1][3] = int(round(fc.get_temperature_max_celsius()))
           forecast[1][4] = int(round(fc.get_temperature_min_celsius()))
-          forecast[1][5] = time.strftime("%A", time.localtime(fc.get_date_UNIX()))
-          forecast[1][6] = time.gmtime(fc.get_date_UNIX() - time.time())[3]
+          forecast[1][5] = time.strftime("%A", time.localtime(fc.get_date_UNIX())) # day of the week
+          forecast[1][6] = time.gmtime(fc.get_date_UNIX() - time.time())[3] # delta hour between forecast time and local time
           forecast[1][7] = forecast[1][1] in global_datas.warning_states
         except Exception as error :
           forecast[1] = ["", 99997, 0, 0, 0, "", 0, False]
