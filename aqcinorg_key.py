@@ -3,4 +3,4 @@
 
 # aqcin.org key
 # https://api.waqi.info/feed/city/?token=key
-key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'

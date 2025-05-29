@@ -13,11 +13,15 @@ class get_daily_forecast () :
     """Get daily forecast from OpenWeatherMap"""
 
     def __init__(self, API_key, city_name) :
-        base_url = "http://api.openweathermap.org/data/2.5/weather?"
-        complete_url = base_url + "appid=" + API_key + "&q=" + city_name
+        complete_url = "https://api.openweathermap.org/data/2.5/weather?appid=" + API_key + "&q=" + city_name
 
         # Get daily forcast from OWM
-        response = requests.get(complete_url)
+        try :
+            response = requests.get(complete_url)
+        except Exception as error :
+            print("{} connection error: {} ".format(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), error))
+            print("\n")
+
         owm_data = response.json()
         self.code = owm_data["cod"]
 

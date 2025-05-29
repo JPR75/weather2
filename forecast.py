@@ -28,6 +28,7 @@ class getForecats () :
             print(error)
             print(time.strftime("%H:%M:%S - %A, %B %d %Y", time.localtime(getForecats.next_update)))
             print("\n")
+            raise
         else :
             getForecats.next_update = time.time() + (config.update_delay * 3600.0)
 
@@ -59,6 +60,7 @@ class getForecats () :
         print("Forcast exception : 2 ")
         print(error)
         print("\n")
+        raise
 
       else :
         forecast[0][0] = False  # Status = OK
